@@ -492,10 +492,22 @@ FullO3CPU<Impl>::regStats()
     this->commit.regStats();
     this->rob.regStats();
 
+    intRegReads
+        .init(regFile.totalNumPhysRegs())
+        .name(name() + ".int_reg_reads")
+        .desc("number of integer register reads")
+        .flags(Stats::nozero | Stats::total);
+
     intRegfileReads
         .name(name() + ".int_regfile_reads")
         .desc("number of integer regfile reads")
         .prereq(intRegfileReads);
+
+    intRegWrites
+        .init(regFile.totalNumPhysRegs())
+        .name(name() + ".int_reg_writes")
+        .desc("number of integer register writes")
+        .flags(Stats::nozero | Stats::total);
 
     intRegfileWrites
         .name(name() + ".int_regfile_writes")
@@ -1241,6 +1253,7 @@ uint64_t
 FullO3CPU<Impl>::readIntReg(int reg_idx)
 {
     intRegfileReads++;
+    intRegReads[reg_idx]++;
     return regFile.readIntReg(reg_idx);
 }
 
@@ -1273,6 +1286,7 @@ void
 FullO3CPU<Impl>::setIntReg(int reg_idx, uint64_t val)
 {
     intRegfileWrites++;
+    intRegWrites[reg_idx]++;
     regFile.setIntReg(reg_idx, val);
 }
 
@@ -1306,6 +1320,7 @@ FullO3CPU<Impl>::readArchIntReg(int reg_idx, ThreadID tid)
 {
     intRegfileReads++;
     PhysRegIndex phys_reg = commitRenameMap[tid].lookupInt(reg_idx);
+    intRegReads[phys_reg]++;
 
     return regFile.readIntReg(phys_reg);
 }
@@ -1346,6 +1361,7 @@ FullO3CPU<Impl>::setArchIntReg(int reg_idx, uint64_t val, ThreadID tid)
 {
     intRegfileWrites++;
     PhysRegIndex phys_reg = commitRenameMap[tid].lookupInt(reg_idx);
+    intRegWrites[phys_reg]++;
 
     regFile.setIntReg(phys_reg, val);
 }

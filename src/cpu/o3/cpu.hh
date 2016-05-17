@@ -730,7 +730,9 @@ class FullO3CPU : public BaseO3CPU
     Stats::Formula totalIpc;
 
     //number of integer register file accesses
+    Stats::Vector intRegReads;
     Stats::Scalar intRegfileReads;
+    Stats::Vector intRegWrites;
     Stats::Scalar intRegfileWrites;
     //number of float register file accesses
     Stats::Scalar fpRegfileReads;
