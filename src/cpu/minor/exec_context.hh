@@ -324,7 +324,7 @@ class ExecContext : public ::ExecContext
     }
 
     void
-    setRegOtherThread(int idx, const TheISA::MiscReg &val,
+    setRegOtherThread(int idx, TheISA::MiscReg val,
         ThreadID tid = InvalidThreadID)
     {
         SimpleThread *other_thread = (tid == InvalidThreadID
