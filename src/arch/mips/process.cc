@@ -107,6 +107,10 @@ MipsLiveProcess::argsInit(int pageSize)
         auxv.push_back(auxv_t(M5_AT_EUID, euid()));
         auxv.push_back(auxv_t(M5_AT_GID, gid()));
         auxv.push_back(auxv_t(M5_AT_EGID, egid()));
+        // Make _dl_random point to a valid address to avoid abortion
+        // The random functionality is not expected, so I casually choose
+        // a surely valid address -- entry point.
+        auxv.push_back(auxv_t(M5_AT_RANDOM, objFile->entryPoint()));
     }
 
     // Calculate how much space we need for arg & env & auxv arrays.
